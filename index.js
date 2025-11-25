@@ -1,83 +1,107 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2');
-require('dotenv').config();  // <-- load .env
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// connect using TiDB DATABASE_URL (no localhost, no manual host/port)
-const connection = mysql.createConnection(process.env.DATABASE_URL);
+// In-memory recipes list (starts with some sample data)
+let recipes = [
+  {
+    id: 1,
+    title: 'Pancakes',
+    category: 'Breakfast',
+    cookTime: '20 min',
+    difficulty: 'Easy',
+    imageUrl: 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg',
+    ingredients: 'Flour, milk, eggs, sugar, butter, baking powder, salt',
+    steps: '1. Mix ingredients.\n2. Cook on pan.\n3. Serve with syrup.'
+  },
+  {
+    id: 2,
+    title: 'Pad Thai',
+    category: 'Lunch',
+    cookTime: '25 min',
+    difficulty: 'Medium',
+    imageUrl: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg',
+    ingredients: 'Rice noodles, shrimp or chicken, bean sprouts, tofu, peanuts',
+    steps: '1. Soak noodles.\n2. Stir-fry and add sauce.\n3. Serve with lime.'
+  }
+];
 
+let nextId = 3;
 
-
-// simple test route
+// Simple test route
 app.get('/', (req, res) => {
-  res.send('Recipe API is running');
+  res.send('Recipe API is running (in-memory)');
 });
 
-// READ all recipes
+// GET all recipes
 app.get('/recipes', (req, res) => {
-  connection.query('SELECT * FROM recipes', (err, results) => {
-    if (err) {
-      console.error('GET /recipes error:', err);
-      return res.status(500).send('Error fetching recipes');
-    }
-    res.json(results);
-  });
+  res.json(recipes);
+});
+
+// GET one recipe by id
+app.get('/recipes/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const recipe = recipes.find(r => r.id === id);
+  if (!recipe) {
+    return res.status(404).send('Recipe not found');
+  }
+  res.json(recipe);
 });
 
 // CREATE recipe
 app.post('/recipes', (req, res) => {
   const { title, category, cookTime, difficulty, imageUrl, ingredients, steps } = req.body;
-
-  connection.query(
-    'INSERT INTO recipes (title, category, cookTime, difficulty, imageUrl, ingredients, steps) VALUES (?,?,?,?,?,?,?)',
-    [title, category, cookTime, difficulty, imageUrl, ingredients, steps],
-    (err, results) => {
-      if (err) {
-        console.error('POST /recipes error:', err);
-        return res.status(500).send('Error adding recipe');
-      }
-      res.status(200).json({ id: results.insertId });
-    }
-  );
+  const newRecipe = {
+    id: nextId++,
+    title,
+    category,
+    cookTime,
+    difficulty,
+    imageUrl,
+    ingredients,
+    steps
+  };
+  recipes.push(newRecipe);
+  res.status(201).json(newRecipe);
 });
 
 // UPDATE recipe
 app.put('/recipes/:id', (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
+  const index = recipes.findIndex(r => r.id === id);
+  if (index === -1) {
+    return res.status(404).send('Recipe not found');
+  }
+
   const { title, category, cookTime, difficulty, imageUrl, ingredients, steps } = req.body;
 
-  connection.query(
-    'UPDATE recipes SET title=?, category=?, cookTime=?, difficulty=?, imageUrl=?, ingredients=?, steps=? WHERE id = ?',
-    [title, category, cookTime, difficulty, imageUrl, ingredients, steps, id],
-    (err, results) => {
-      if (err) {
-        console.error('PUT /recipes error:', err);
-        return res.status(500).send('Error updating recipe');
-      }
-      res.json(results);
-    }
-  );
+  recipes[index] = {
+    ...recipes[index],
+    title,
+    category,
+    cookTime,
+    difficulty,
+    imageUrl,
+    ingredients,
+    steps
+  };
+
+  res.json(recipes[index]);
 });
 
 // DELETE recipe
 app.delete('/recipes/:id', (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
+  const index = recipes.findIndex(r => r.id === id);
+  if (index === -1) {
+    return res.status(404).send('Recipe not found');
+  }
 
-  connection.query(
-    'DELETE FROM recipes WHERE id = ?',
-    [id],
-    (err, results) => {
-      if (err) {
-        console.error('DELETE /recipes error:', err);
-        return res.status(500).send('Error deleting recipe');
-      }
-      res.json(results);
-    }
-  );
+  const deleted = recipes.splice(index, 1)[0];
+  res.json(deleted);
 });
 
 const PORT = 3000;
