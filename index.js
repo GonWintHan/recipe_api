@@ -13,9 +13,16 @@ let recipes = [
     category: 'Breakfast',
     cookTime: '20 min',
     difficulty: 'Easy',
-    imageUrl: 'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg',
+    imageUrl: 'assets/images/pancakes.jpg',
     ingredients: 'Flour, milk, eggs, sugar, butter, baking powder, salt',
-    steps: '1. Mix ingredients.\n2. Cook on pan.\n3. Serve with syrup.'
+    steps:
+      '1. Mix dry ingredients in a bowl.\n' +
+      '2. Add milk and eggs, whisk until smooth.\n' +
+      '3. Heat pan with a little butter.\n' +
+      '4. Pour batter and cook until bubbles form.\n' +
+      '5. Flip and cook the other side.\n' +
+      '6. Serve with syrup or fruit.',
+    isFavorite: false,
   },
   {
     id: 2,
@@ -23,11 +30,59 @@ let recipes = [
     category: 'Lunch',
     cookTime: '25 min',
     difficulty: 'Medium',
-    imageUrl: 'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg',
-    ingredients: 'Rice noodles, shrimp or chicken, bean sprouts, tofu, peanuts',
-    steps: '1. Soak noodles.\n2. Stir-fry and add sauce.\n3. Serve with lime.'
-  }
+    imageUrl: 'assets/images/pad_thai.jpg',
+    ingredients:
+      'Rice noodles, shrimp or chicken, egg, bean sprouts, tofu, garlic, peanuts, lime, Pad Thai sauce',
+    steps:
+      '1. Soak rice noodles in warm water until soft.\n' +
+      '2. Stir-fry garlic and tofu in a hot pan.\n' +
+      '3. Add shrimp or chicken and cook.\n' +
+      '4. Push everything aside and scramble the egg.\n' +
+      '5. Add noodles and Pad Thai sauce, toss well.\n' +
+      '6. Add bean sprouts and chives, cook briefly.\n' +
+      '7. Serve with crushed peanuts and lime.',
+    isFavorite: false,
+  },
+  {
+    id: 3,
+    title: 'Green Curry with Chicken',
+    category: 'Dinner',
+    cookTime: '35 min',
+    difficulty: 'Medium',
+    imageUrl: 'assets/images/green_curry.jpg',
+    ingredients:
+      'Chicken, green curry paste, coconut milk, eggplant, bamboo shoots, basil, fish sauce, sugar',
+    steps:
+      '1. Fry green curry paste in a pot until fragrant.\n' +
+      '2. Add coconut milk and bring to a gentle boil.\n' +
+      '3. Add chicken pieces and cook until almost done.\n' +
+      '4. Add eggplant and bamboo shoots.\n' +
+      '5. Season with fish sauce and sugar.\n' +
+      '6. Add basil leaves before turning off the heat.\n' +
+      '7. Serve with steamed rice.',
+    isFavorite: false,
+  },
+  {
+    id: 4,
+    title: 'Mango Sticky Rice',
+    category: 'Dessert',
+    cookTime: '40 min',
+    difficulty: 'Medium',
+    imageUrl: 'assets/images/mango_sticky_rice.jpg',
+    ingredients:
+      'Glutinous rice, coconut milk, sugar, salt, ripe mango, sesame seeds',
+    steps:
+      '1. Soak glutinous rice in water for a few hours.\n' +
+      '2. Steam the rice until cooked.\n' +
+      '3. Warm coconut milk with sugar and a pinch of salt.\n' +
+      '4. Mix most of the coconut milk with the hot sticky rice.\n' +
+      '5. Let it rest so the rice absorbs the coconut milk.\n' +
+      '6. Serve with sliced ripe mango and drizzle extra coconut milk.\n' +
+      '7. Sprinkle with sesame seeds.',
+    isFavorite: false,
+  },
 ];
+
 
 let nextId = 3;
 
